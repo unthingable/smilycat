@@ -1,21 +1,56 @@
 @import "base.css";
 
+html {
+    height: 100%;
+}
+
 body {
     font-family: sans-serif;
-    margin-top:50px;
-    padding-top: 20px;
-    margin-left:300px;
+    /* margin-top:50px; */
+    /* padding-top: 20px; */
+    /* margin-left:300px; */
+    height: 100%;
+    margin: 0;
+}
+
+div#title {
+    background:#C0DFDF;
+    padding: 12px 20px;
+    width: 100%;
+    height: 20px;
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#title a {
+    text-decoration: none;
+}
+
+div#container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+#container > div {
+    height: 100%;
 }
 
 div#header {
     padding: 12px 20px 12px 0px;
-    height: 100%;
-    width:270px;
-    position:fixed;
-    left:0;
-    top:0;
+    /* height: 100%; */
+    width:120px;
+    /* position:fixed; */
+    /* left:0; */
+    /* top:100px; */
     background:#C0DFDF;
-    color: white;
+    /* color: white; */
+}
+
+#header li {
+    list-style: none;
+    line-height: 23px;
 }
 
 div#logo {
@@ -34,18 +69,22 @@ div#logo a {
 }
 
 div#header #navigation {
-    display:table;
-    margin-left: 40px;
+    /* display:table; */
+    margin-left: 20px;
 }
 
 div#header #navigation a {
     display:table-row;
-    color: white;
+    /* color: white; */
     font-size: 18px;
     font-weight: bold;
     text-decoration: none;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     width:100%;
+}
+
+div#header #navigation a:hover {
+    text-decoration: underline;
 }
 
 div#footer {
@@ -75,6 +114,7 @@ div#content{
     font-size: 14px;
     line-height: 18px;
     padding: 0 30px 20px 30px;
+    /* height: 100%; */
 }
 
 div#content h1{
