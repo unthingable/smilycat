@@ -6,9 +6,6 @@ html {
 
 body {
     font-family: sans-serif;
-    /* margin-top:50px; */
-    /* padding-top: 20px; */
-    /* margin-left:300px; */
     height: 100%;
     margin: 0;
 }
@@ -39,13 +36,8 @@ div#container {
 
 div#header {
     padding: 12px 20px 12px 0px;
-    /* height: 100%; */
     width:120px;
-    /* position:fixed; */
-    /* left:0; */
-    /* top:100px; */
     background:#C0DFDF;
-    /* color: white; */
 }
 
 #header li {
@@ -75,11 +67,9 @@ div#header #navigation {
 
 div#header #navigation a {
     display:table-row;
-    /* color: white; */
     font-size: 18px;
     font-weight: bold;
     text-decoration: none;
-    /* text-transform: uppercase; */
     width:100%;
 }
 
@@ -114,7 +104,6 @@ div#content{
     font-size: 14px;
     line-height: 18px;
     padding: 0 30px 20px 30px;
-    /* height: 100%; */
 }
 
 div#content h1{
