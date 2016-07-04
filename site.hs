@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
-{-# LANGUAGE OverloadedStrings, FlexibleInstances #-}
+{-# LANGUAGE OverloadedStrings #-}
 import           Data.Monoid (mappend, (<>))
 import           Hakyll
 import Debug.Trace
@@ -106,7 +106,8 @@ main = hakyll $ do
     --   compile pandocCompiler
 
     match "pages/*" $ do
-      route $ setExtension "html" `composeRoutes` gsubRoute "pages/" (const "")
+      let (+~+) = composeRoutes
+      route $ setExtension "html" +~+ gsubRoute "pages/" (const "")
       -- route idRoute
       compile $ do
         -- posts <- recentFirst =<< loadAll "posts/*"
@@ -120,7 +121,7 @@ main = hakyll $ do
           >>= saveSnapshot "preload"
           >>= applyAsTemplate ctx
           >>= renderPandoc
-          >>= loadAndApplyTemplate "templates/default.html" ctx
+          >>= loadAndApplyTemplate "templates/default.html" (indexCtx myRoute)
           >>= relativizeUrls
 
     -- compileTemplates
@@ -141,19 +142,28 @@ menuCtx path = (field "me" $ \item -> do
 
 menuItems :: Compiler [Item String]
 menuItems = do
-  results <- loadAllSnapshots (menuFiles) "preload"
-  -- traceShowM results
-  return results
+  cc <- mapM (\i -> loadAllSnapshots i "preload") menuFiles
+  return $ concat cc
+  -- _ <- traceShowM results
+  -- matches <- getMatches menuFiles
+  -- _ <- traceShowM matches
+  -- return undefined
   where menuElements = [ "kittens"
-                       , "about"
+                       , "index"
                        , "sires"
                        , "dames"
                        , "gallery"
                        , "retired"
+                       , "contact"
                        , "breed"
                        ] :: [String]
-        regexComponent = intercalate "|" menuElements
-        menuFiles = fromRegex ("\\("++regexComponent++"\\).*")
+        -- regexComponent = intercalate "|" menuElements
+        -- menuFiles = fromList
+        --   $ map (setVersion Nothing . fromFilePath)
+        --   $ map (\s -> "pages/" ++ s ++ ".*") menuElements
+        -- menuFiles = fromRegex ("\\("++regexComponent++"\\).*")
+        menuFiles :: [Pattern]
+        menuFiles = map (\s -> fromGlob ("pages/"++ s ++".*")) menuElements
 
 indexCtx :: Maybe FilePath -> Context String
 indexCtx path =
