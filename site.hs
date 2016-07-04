@@ -5,6 +5,7 @@ import           Hakyll
 import Debug.Trace
 import Data.String
 import Data.List
+import Control.Applicative
 
 --------------------------------------------------------------------------------
 contentContext :: Compiler (Context String)
@@ -114,14 +115,12 @@ main = hakyll $ do
         -- let indexCtx =
         --       listField "posts" postCtx (return posts) <>
         --       defaultContext
-        myRoute <- getRoute =<< getUnderlying
-        let ctx = indexCtx myRoute
 
         getResourceBody
           >>= saveSnapshot "preload"
-          >>= applyAsTemplate ctx
+          >>= applyAsTemplate indexCtx
           >>= renderPandoc
-          >>= loadAndApplyTemplate "templates/default.html" (indexCtx myRoute)
+          >>= loadAndApplyTemplate "templates/default.html" indexCtx
           >>= relativizeUrls
 
     -- compileTemplates
@@ -133,21 +132,27 @@ postCtx =
     dateField "date" "%B %e, %Y" `mappend`
     defaultContext
 
-menuCtx :: Maybe FilePath -> Context String
-menuCtx path = (field "me" $ \item -> do
-    -- _ <- traceM "here"
-    metadata <- getMetadata (itemIdentifier $ trace "item -- " item)
-    _ <- traceShowM metadata
-    return (trace "hello" $ show metadata))
+menuCtx :: Context String
+menuCtx =
+  urlField "url" <>
+  metadataField <>
+  titleField "title" <>
+  (field "me" $ \item -> do
+      myRoute   <- getRoute =<< getUnderlying
+      thisRoute <- getRoute $ itemIdentifier item
+      let result = do
+            myP   <- myRoute
+            thisP <- thisRoute
+            return $ myP == thisP
+      case result of
+        Just True -> return "me"
+        _         -> empty
+      )
 
 menuItems :: Compiler [Item String]
 menuItems = do
   cc <- mapM (\i -> loadAllSnapshots i "preload") menuFiles
   return $ concat cc
-  -- _ <- traceShowM results
-  -- matches <- getMatches menuFiles
-  -- _ <- traceShowM matches
-  -- return undefined
   where menuElements = [ "kittens"
                        , "index"
                        , "sires"
@@ -157,16 +162,11 @@ menuItems = do
                        , "contact"
                        , "breed"
                        ] :: [String]
-        -- regexComponent = intercalate "|" menuElements
-        -- menuFiles = fromList
-        --   $ map (setVersion Nothing . fromFilePath)
-        --   $ map (\s -> "pages/" ++ s ++ ".*") menuElements
-        -- menuFiles = fromRegex ("\\("++regexComponent++"\\).*")
         menuFiles :: [Pattern]
         menuFiles = map (\s -> fromGlob ("pages/"++ s ++".*")) menuElements
 
-indexCtx :: Maybe FilePath -> Context String
-indexCtx path =
-  listField "menuItems" defaultContext menuItems <>
+indexCtx :: Context String
+indexCtx =
+  listField "menuItems" menuCtx menuItems <>
   listField "posts" postCtx (recentFirst =<< loadAll "posts/*") <>
   defaultContext
