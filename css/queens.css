@@ -35,15 +35,23 @@ div#container {
 }
 
 div#header {
-    padding: 12px 20px 12px 0px;
-    width:120px;
+    /* padding: 12px 20px 12px 0px; */
+    /* width:130px; */
     background:#C0DFDF;
 }
 
-#header li {
-    list-style: none;
-    line-height: 23px;
+#header .menuitem.me {
+    /* list-style: none; */
+    background: #87ceff;
 }
+
+#header .menuitem {
+    line-height: 23px;
+    font-size: 14px;
+    padding: 3px 10px;
+    text-overflow: nowrap;
+}
+
 
 div#logo {
     text-align: center;
@@ -54,23 +62,24 @@ div#logo {
 div#logo a {
     color: #fff;
     font-family: times, serif;
-    font-size: 38px;
+    /* font-size: 38px; */
     font-weight: light;
     text-decoration: none;
     width: 270px;
 }
 
 div#header #navigation {
-    /* display:table; */
-    margin-left: 20px;
+    display:table;
+    /* padding-left: 20px; */
+    white-space: nowrap;
 }
 
 div#header #navigation a {
-    display:table-row;
-    font-size: 18px;
+    /* display:table-row; */
+    /* font-size: 18px; */
     font-weight: bold;
     text-decoration: none;
-    width:100%;
+    /* width:100%; */
 }
 
 div#header #navigation a:hover {

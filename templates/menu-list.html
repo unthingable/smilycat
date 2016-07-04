@@ -1,7 +1,7 @@
   $if(menuItems)$
   $for(menuItems)$
-  <li $if(me)$ class="$me$" $endif$>
+  <div class="menuitem $me$">
     <a href="$url$">$title$</a>
-  </li>
+  </div>
   $endfor$
   $endif$

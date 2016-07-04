@@ -6,6 +6,8 @@ import Debug.Trace
 import Data.String
 import Data.List
 import Control.Applicative
+import Data.Maybe
+import Control.Monad
 
 --------------------------------------------------------------------------------
 contentContext :: Compiler (Context String)
@@ -137,36 +139,49 @@ menuCtx =
   urlField "url" <>
   metadataField <>
   titleField "title" <>
-  (field "me" $ \item -> do
-      myRoute   <- getRoute =<< getUnderlying
-      thisRoute <- getRoute $ itemIdentifier item
-      let result = do
-            myP   <- myRoute
-            thisP <- thisRoute
-            return $ myP == thisP
-      case result of
-        Just True -> return "me"
-        _         -> empty
-      )
+  field "me" isMe
+  where isMe item = do
+          myRoute   <- getRoute =<< getUnderlying
+          thisRoute <- getRoute $ itemIdentifier item
+          let result = do
+                myP   <- myRoute
+                thisP <- thisRoute
+                return $ myP == thisP
+          case result of
+            Just True -> return "me"
+            _         -> return ""
 
-menuItems :: Compiler [Item String]
-menuItems = do
+
+defaultMenuItems =
+  menuItemsFrom [ "kittens"
+                , "index"
+                , "sires"
+                , "dames"
+                , "gallery"
+                , "retired"
+                , "contact"
+                , "breed"
+                ]
+
+indexMenuItems :: Compiler [Item String]
+indexMenuItems = do
+  index <- loadAllSnapshots "pages/index.*" "preload" :: Compiler [Item String]
+  df <- mapM (flip getMetadataField "menu" . itemIdentifier) $ listToMaybe index
+  case join df of
+    Nothing -> return []
+    Just  s -> menuItemsFrom $ words s
+
+
+menuItemsFrom :: [String] -> Compiler [Item String]
+menuItemsFrom menuElements = do
   cc <- mapM (\i -> loadAllSnapshots i "preload") menuFiles
   return $ concat cc
-  where menuElements = [ "kittens"
-                       , "index"
-                       , "sires"
-                       , "dames"
-                       , "gallery"
-                       , "retired"
-                       , "contact"
-                       , "breed"
-                       ] :: [String]
+  where
         menuFiles :: [Pattern]
         menuFiles = map (\s -> fromGlob ("pages/"++ s ++".*")) menuElements
 
 indexCtx :: Context String
 indexCtx =
-  listField "menuItems" menuCtx menuItems <>
+  listField "menuItems" menuCtx indexMenuItems <>
   listField "posts" postCtx (recentFirst =<< loadAll "posts/*") <>
   defaultContext

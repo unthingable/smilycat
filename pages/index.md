@@ -1,6 +1,6 @@
 ---
 title: About us
-foo: bar
+menu: kittens index sires dames gallery retired contact breed
 ---
 
 We are an in-home cattery and the Siberians are our passion. Our cats live in a friendly environment enjoying all privileges of members of the pack. We are located in the San Francisco Bay Area, and you are always welcome to see the conditions. All our kittens are available for shipping.
