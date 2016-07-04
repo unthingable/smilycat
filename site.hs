@@ -119,6 +119,7 @@ main = hakyll $ do
         --       defaultContext
 
         getResourceBody
+        -- templateBodyCompiler
           >>= saveSnapshot "preload"
           >>= applyAsTemplate indexCtx
           >>= renderPandoc
