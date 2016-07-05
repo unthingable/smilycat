@@ -1,0 +1,3 @@
+---
+title: Retired cats
+---

@@ -8,6 +8,8 @@ import Data.List
 import Control.Applicative
 import Data.Maybe
 import Control.Monad
+import qualified Data.HashMap.Strict            as HMS
+import qualified Data.Text                      as T
 
 --------------------------------------------------------------------------------
 contentContext :: Compiler (Context String)
@@ -103,23 +105,12 @@ main = hakyll $ do
     match "templates/*" $ do
       compile templateBodyCompiler
 
-    -- match "pages/*" $ version "preLoad" $ do
-    --   route $ setExtension "html" `composeRoutes` gsubRoute "pages/" (const "preLoad/")
-    --   -- route idRoute
-    --   compile pandocCompiler
-
     match "pages/*" $ do
       let (+~+) = composeRoutes
       route $ setExtension "html" +~+ gsubRoute "pages/" (const "")
-      -- route idRoute
       compile $ do
-        -- posts <- recentFirst =<< loadAll "posts/*"
-        -- let indexCtx =
-        --       listField "posts" postCtx (return posts) <>
-        --       defaultContext
 
         getResourceBody
-        -- templateBodyCompiler
           >>= saveSnapshot "preload"
           >>= applyAsTemplate indexCtx
           >>= renderPandoc
@@ -152,7 +143,6 @@ menuCtx =
             Just True -> return "me"
             _         -> return ""
 
-
 defaultMenuItems =
   menuItemsFrom [ "kittens"
                 , "index"
@@ -172,7 +162,6 @@ indexMenuItems = do
     Nothing -> return []
     Just  s -> menuItemsFrom $ words s
 
-
 menuItemsFrom :: [String] -> Compiler [Item String]
 menuItemsFrom menuElements = do
   cc <- mapM (\i -> loadAllSnapshots i "preload") menuFiles
@@ -183,6 +172,18 @@ menuItemsFrom menuElements = do
 
 indexCtx :: Context String
 indexCtx =
+  groupCtx <>
   listField "menuItems" menuCtx indexMenuItems <>
   listField "posts" postCtx (recentFirst =<< loadAll "posts/*") <>
   defaultContext
+
+
+--------------------------------------------------------------------------------
+groupCtx :: Context String
+groupCtx = Context $ \k _ i -> do
+  item <- getUnderlying
+  md   <- getMetadata item
+  let values = map (Item item) . concatMap words $ lookupString k md
+  case (isPrefixOf "group_" k) of
+    False -> empty
+    True  -> return $ ListField defaultContext (traceShowId values)
