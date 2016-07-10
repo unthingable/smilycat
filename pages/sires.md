@@ -2,4 +2,4 @@
 title: Sires
 ---
 
-Тима.
+$include("cats/timothy"$)

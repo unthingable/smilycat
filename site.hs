@@ -5,14 +5,19 @@ import           Hakyll
 import Debug.Trace
 import Data.String
 import Data.String.Utils (replace, strip)
-import Data.List
-import Control.Applicative
+import Data.List --(intercalate, head, isPrefixOf)
+import Control.Applicative ((<$>), empty)
 import Data.Maybe
-import Control.Monad
+import Control.Monad (join)
 import qualified Data.HashMap.Strict            as HMS
 import qualified Data.Text                      as T
+import System.FilePath (takeDirectory)
+import System.FilePath.Find as FF
+import System.IO.Unsafe (unsafePerformIO)
 
 --------------------------------------------------------------------------------
+(+~+) = composeRoutes
+
 contentContext :: Compiler (Context String)
 contentContext = do
   menu <- getMenu
@@ -115,7 +120,6 @@ main = hakyll $ do
       compile templateBodyCompiler
 
     match "pages/*" $ do
-      let (+~+) = composeRoutes
       route $ setExtension "html" +~+ gsubRoute "pages/" (const "")
       compile $ do
 
@@ -189,6 +193,7 @@ indexCtx =
 
 
 --------------------------------------------------------------------------------
+-- | Parse a "group_*: ..." metadata field into a ListField
 groupCtx :: Context String
 groupCtx = Context $ \k _ i -> do
   item <- getUnderlying
@@ -198,13 +203,13 @@ groupCtx = Context $ \k _ i -> do
     False -> empty
     True  -> return $ ListField defaultContext values
 
+-- | Include an arbitrary page: '$include("foo/bar")'
 includeCtx :: Context String
-includeCtx = Context $ \k _ i -> do
-  item <- getUnderlying
-  md   <- getMetadata item
-  case (words $ replace "_" " " k) of
-    "include" : ss -> do
-      newItems <- flip loadAllSnapshots "preload" . fromGlob $ (intercalate "/" ss) ++ ".md"
-      return . StringField . lstrip . itemBody $ head $ newItems
-    _ -> empty
-  where lstrip = unlines . map strip . lines
+includeCtx = functionField "include" doInc
+  where doInc (arg:_) _ = do
+          newItems <- flip loadAllSnapshots "preload" . fromGlob . (++ ".*") $ arg
+          return . fromMaybe (arg ++ " --not found--") . listToMaybe . map (lstrip . itemBody) $ newItems
+        doInc [] _ = empty
+        lstrip = unlines . map strip . lines
+
+--------------------------------------------------------------------------------

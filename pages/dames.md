@@ -2,4 +2,4 @@
 title: Dames
 ---
 
-Лиска.
+$include("cats/vasilisa")$
