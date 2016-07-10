@@ -12,3 +12,5 @@ Blue silver tabby point with blue eyes. His Neva Masquerade typical coat is thic
 His parents are <a href="http://izodissei.ru/rod_npl.htm">Gr.Eur.Ch.</a>
 <a href="http://izodissei.ru/male_r.htm#npl">Napoleon Iz Odissei</a> and
 <a href="http://velikiiohotnik.narod.ru/iness.html">Gr.Eur.Ch.Ines Sibirskaya Exotica</a>.
+
+[More images](gallery/finist.html)

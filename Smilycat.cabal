@@ -10,5 +10,7 @@ executable site
                   , unordered-containers
                   , text
                   , MissingH
+                  , filepath
+                  , filemanip
   ghc-options:      -threaded
   default-language: Haskell2010

@@ -48,6 +48,11 @@ div#container {
     padding: 30px;
 }
 
+.gallery img {
+    padding: 20px;
+    width: 200px;
+}
+
 div#header {
     /* padding: 12px 20px 12px 0px; */
     /* width:130px; */

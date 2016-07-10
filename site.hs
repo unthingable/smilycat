@@ -131,6 +131,7 @@ main = hakyll $ do
           >>= relativizeUrls
 
     -- compileTemplates
+    compileGallery
 
 
 --------------------------------------------------------------------------------
@@ -213,3 +214,50 @@ includeCtx = functionField "include" doInc
         lstrip = unlines . map strip . lines
 
 --------------------------------------------------------------------------------
+
+getPicsInDir :: Compiler [Item CopyFile]
+getPicsInDir = do
+    postPath <- toFilePath <$> getUnderlying
+    let pattern = fromGlob $ postPath ++ "/*.jpg"
+    loadAll pattern
+
+getSubGalleries :: Compiler [Item String]
+getSubGalleries = do
+    postPath <- toFilePath <$> getUnderlying
+    let pattern = fromGlob $ postPath ++ "/*"
+    loadAllSnapshots pattern "gallery"
+
+compileGallery :: Rules ()
+compileGallery = do
+  let galleryDirs =
+        unsafePerformIO $
+        FF.find always (depth ==? 2 &&? FF.fileType ==? Directory) "images/gallery"
+
+  create (traceShowId $ fromFilePath <$> galleryDirs) $ do
+    route $ setExtension ".html" +~+ gsubRoute "images/" (const "")
+    compile $ do
+      makeItem ""
+        >>= loadAndApplyTemplate "templates/gallery.html" picsCtx
+        >>= saveSnapshot "preload"
+        >>= saveSnapshot "gallery"
+        >>= loadAndApplyTemplate "templates/default.html" indexCtx
+        >>= relativizeUrls
+
+picContext :: Context CopyFile
+picContext = urlField "url"
+
+subGalleryContext :: Context [String]
+subGalleryContext =
+  urlField "url" <>
+  capTitleField "title" <>
+  (field "head" $ \item -> do
+      first <- getMetadataField' (itemIdentifier item) "pics"
+      return undefined)
+
+picsCtx :: Context String
+picsCtx =
+    listField "pics" picContext getPicsInDir <>
+    capTitleField "title" <>
+    defaultContext
+
+capTitleField = mapContext (T.unpack . T.toTitle . T.pack) . titleField
