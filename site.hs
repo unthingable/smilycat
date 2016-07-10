@@ -4,6 +4,7 @@ import           Data.Monoid (mappend, (<>))
 import           Hakyll
 import Debug.Trace
 import Data.String
+import Data.String.Utils (replace, strip)
 import Data.List
 import Control.Applicative
 import Data.Maybe
@@ -58,6 +59,14 @@ main = hakyll $ do
             >>= loadAndApplyTemplate "templates/post.html"    postCtx
             >>= loadAndApplyTemplate "templates/default.html" postCtx
             >>= relativizeUrls
+
+    match "cats/*" $ do
+        route $ setExtension "html"
+        compile $ pandocCompiler
+          >>= loadAndApplyTemplate "templates/cat.html"     indexCtx
+          >>= saveSnapshot "preload"
+          >>= loadAndApplyTemplate "templates/default.html" indexCtx
+          >>= relativizeUrls
 
     create ["archive.html"] $ do
         route idRoute
@@ -157,7 +166,7 @@ defaultMenuItems =
 indexMenuItems :: Compiler [Item String]
 indexMenuItems = do
   index <- loadAllSnapshots "pages/index.*" "preload" :: Compiler [Item String]
-  df <- mapM (flip getMetadataField "menu" . itemIdentifier) $ listToMaybe index
+  df    <- mapM (flip getMetadataField "menu" . itemIdentifier) $ listToMaybe index
   case join df of
     Nothing -> return []
     Just  s -> menuItemsFrom $ words s
@@ -168,10 +177,11 @@ menuItemsFrom menuElements = do
   return $ concat cc
   where
         menuFiles :: [Pattern]
-        menuFiles = map (\s -> fromGlob ("pages/"++ s ++".*")) menuElements
+        menuFiles = map (\s -> fromGlob (s ++ ".*")) menuElements
 
 indexCtx :: Context String
 indexCtx =
+  includeCtx <>
   groupCtx <>
   listField "menuItems" menuCtx indexMenuItems <>
   listField "posts" postCtx (recentFirst =<< loadAll "posts/*") <>
@@ -186,4 +196,15 @@ groupCtx = Context $ \k _ i -> do
   let values = map (Item item) . concatMap words $ lookupString k md
   case (isPrefixOf "group_" k) of
     False -> empty
-    True  -> return $ ListField defaultContext (traceShowId values)
+    True  -> return $ ListField defaultContext values
+
+includeCtx :: Context String
+includeCtx = Context $ \k _ i -> do
+  item <- getUnderlying
+  md   <- getMetadata item
+  case (words $ replace "_" " " k) of
+    "include" : ss -> do
+      newItems <- flip loadAllSnapshots "preload" . fromGlob $ (intercalate "/" ss) ++ ".md"
+      return . StringField . lstrip . itemBody $ head $ newItems
+    _ -> empty
+  where lstrip = unlines . map strip . lines
