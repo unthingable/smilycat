@@ -48,8 +48,21 @@ div#container {
     padding: 30px;
 }
 
+.gallery {
+    text-align: left;
+}
+
 .gallery img {
-    padding: 20px;
+    padding: 10px;
+    width: 200px;
+}
+
+.subgallery {
+    text-align: center;
+}
+
+.subgallery img {
+    padding: 0 10px;
     width: 200px;
 }
 

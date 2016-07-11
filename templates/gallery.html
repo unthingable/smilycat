@@ -1,5 +1,23 @@
+$if(crumbs)$
+$for(crumbs)$
+$url$
+$endfor$
+$endif$
+
 <h3>$title$</h3>
+$if(subs)$
 <div class="gallery">
+  $for(subs)$
+  <div class="subgallery">
+    <a href="$subUrl$"><img src="$url$"/></a>
+    </br>
+    <a href="$subUrl$">$subTitle$</a>
+  </div>
+  $endfor$
+</div>
+$endif$
+<div class="gallery">
+
   $for(pics)$
   <a href="$url$"><img src="$url$"/></a>
   $endfor$

@@ -3,15 +3,16 @@
 import           Data.Monoid (mappend, (<>))
 import           Hakyll
 import Debug.Trace
+import Data.Function (on)
 import Data.String
 import Data.String.Utils (replace, strip)
 import Data.List --(intercalate, head, isPrefixOf)
 import Control.Applicative ((<$>), empty)
 import Data.Maybe
-import Control.Monad (join)
+import Control.Monad --(join, msum)
 import qualified Data.HashMap.Strict            as HMS
 import qualified Data.Text                      as T
-import System.FilePath (takeDirectory)
+import System.FilePath --(takeDirectory, takeBaseName)
 import System.FilePath.Find as FF
 import System.IO.Unsafe (unsafePerformIO)
 
@@ -207,57 +208,71 @@ groupCtx = Context $ \k _ i -> do
 -- | Include an arbitrary page: '$include("foo/bar")'
 includeCtx :: Context String
 includeCtx = functionField "include" doInc
-  where doInc (arg:_) _ = do
-          newItems <- flip loadAllSnapshots "preload" . fromGlob . (++ ".*") $ arg
-          return . fromMaybe (arg ++ " --not found--") . listToMaybe . map (lstrip . itemBody) $ newItems
-        doInc [] _ = empty
-        lstrip = unlines . map strip . lines
+  where
+    doInc (arg:_) _ = do
+      newItems <- flip loadAllSnapshots "preload" . fromGlob . (++ ".*") $ arg
+      return . maybe (arg ++ " --not found--") (lstrip . itemBody) $ listToMaybe newItems
+    doInc _ _ = empty
+    lstrip = unlines . map strip . lines
 
 --------------------------------------------------------------------------------
 
 getPicsInDir :: Compiler [Item CopyFile]
 getPicsInDir = do
-    postPath <- toFilePath <$> getUnderlying
-    let pattern = fromGlob $ postPath ++ "/*.jpg"
+    path <- toFilePath <$> getUnderlying
+    let pattern = foldl1 (.||.) $ map (fromGlob . (path ++)) ["/*.jpg", "/*.JPG"]
+    -- liftM (sortOn itemBody) $
     loadAll pattern
 
-getSubGalleries :: Compiler [Item String]
-getSubGalleries = do
-    postPath <- toFilePath <$> getUnderlying
-    let pattern = fromGlob $ postPath ++ "/*"
-    loadAllSnapshots pattern "gallery"
+getSubPics :: Compiler [Item CopyFile]
+getSubPics = do
+    path <- toFilePath <$> getUnderlying
+    let pattern = foldl1 (.||.) $ map (fromGlob . (path ++)) ["/*/*.jpg", "/*/*.JPG"]
+    items <- loadAll pattern
+    -- get one from each
+    let groups = groupBy ((==) `on` (takeBaseName . takeDirectory . toFilePath . itemIdentifier)) items
+        heads  = catMaybes . map listToMaybe $ groups
+    return $ heads
+
+-- getCrumbs = do
+
 
 compileGallery :: Rules ()
 compileGallery = do
   let galleryDirs =
         unsafePerformIO $
-        FF.find always (depth ==? 2 &&? FF.fileType ==? Directory) "images/gallery"
+        FF.find always (depth >=? 2 &&? FF.fileType ==? Directory) "images/gallery"
 
-  create (traceShowId $ fromFilePath <$> galleryDirs) $ do
+  create (traceShowId $ fromFilePath <$> reverse galleryDirs) $ do
     route $ setExtension ".html" +~+ gsubRoute "images/" (const "")
     compile $ do
       makeItem ""
         >>= loadAndApplyTemplate "templates/gallery.html" picsCtx
         >>= saveSnapshot "preload"
-        >>= saveSnapshot "gallery"
         >>= loadAndApplyTemplate "templates/default.html" indexCtx
         >>= relativizeUrls
 
 picContext :: Context CopyFile
 picContext = urlField "url"
 
-subGalleryContext :: Context [String]
+subGalleryContext :: Context CopyFile
 subGalleryContext =
   urlField "url" <>
-  capTitleField "title" <>
-  (field "head" $ \item -> do
-      first <- getMetadataField' (itemIdentifier item) "pics"
-      return undefined)
+  (field "subTitle" $ \item -> do
+      return . subGalleryTitle . toFilePath $ itemIdentifier item) <>
+  (field "subUrl" $ \item -> do
+      return . subGalleryUrl . toFilePath $ itemIdentifier item)
+  where
+    -- Careful with that path, Eugene - has to match the routes in compileGallery exactly
+    subBase = dropTrailingPathSeparator . dropFileName
+    subGalleryTitle = T.unpack . T.toTitle . T.pack . takeBaseName . subBase
+    subGalleryUrl = (\s -> "/" ++ s ++ ".html") . dropTrailingPathSeparator . joinPath . tail . init . splitPath
 
 picsCtx :: Context String
 picsCtx =
-    listField "pics" picContext getPicsInDir <>
-    capTitleField "title" <>
-    defaultContext
+  listField "subs" subGalleryContext getSubPics <>
+  listField "pics" picContext getPicsInDir <>
+  capTitleField "title" <>
+  defaultContext
 
 capTitleField = mapContext (T.unpack . T.toTitle . T.pack) . titleField

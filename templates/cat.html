@@ -4,11 +4,20 @@
   <tr>
   $if(titleImg)$
   <td>
+    $if(gallery)$
+    <a href="$gallery$"><img src="images/$titleImg$"/></a>
+    $else$
     <img src="images/$titleImg$"/>
+    $endif$
+
   </td>
   $endif$
   <td>
     $body$
+
+    $if(gallery)$
+    <a href="$gallery$">More images</a>
+    $endif$
   </td>
   </tr>
 </table>
