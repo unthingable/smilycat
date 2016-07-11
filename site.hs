@@ -234,8 +234,14 @@ getSubPics = do
         heads  = catMaybes . map listToMaybe $ groups
     return $ heads
 
--- getCrumbs = do
-
+-- a little fragile, but works
+getCrumbs :: Compiler [Item String]
+getCrumbs = do
+  path <- toFilePath <$> getUnderlying
+  return . map pathItem . drop 2 $ crumbs path []
+  where crumbs "" ps = ps
+        crumbs s ps  = crumbs (minusOne s) (s : ps)
+        minusOne     = dropTrailingPathSeparator . joinPath . init . splitPath
 
 compileGallery :: Rules ()
 compileGallery = do
@@ -264,15 +270,16 @@ subGalleryContext =
       return . subGalleryUrl . toFilePath $ itemIdentifier item)
   where
     -- Careful with that path, Eugene - has to match the routes in compileGallery exactly
-    subBase = dropTrailingPathSeparator . dropFileName
-    subGalleryTitle = T.unpack . T.toTitle . T.pack . takeBaseName . subBase
+    subGalleryTitle = takeBaseName . takeDirectory
     subGalleryUrl = (\s -> "/" ++ s ++ ".html") . dropTrailingPathSeparator . joinPath . tail . init . splitPath
 
 picsCtx :: Context String
 picsCtx =
   listField "subs" subGalleryContext getSubPics <>
   listField "pics" picContext getPicsInDir <>
-  capTitleField "title" <>
+  listField "crumbs" defaultContext getCrumbs <>
+  titleField "title" <>
   defaultContext
 
-capTitleField = mapContext (T.unpack . T.toTitle . T.pack) . titleField
+-- capTitleField = mapContext (T.unpack . T.toTitle . T.pack) . titleField
+pathItem x = Item (fromFilePath x) x

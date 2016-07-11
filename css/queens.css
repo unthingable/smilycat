@@ -154,3 +154,11 @@ div#content h1{
     font-size: 46px;
     text-align: center;
 }
+
+.cap {
+    text-transform: capitalize;
+}
+
+.crumbs {
+    padding: 10px;
+}
