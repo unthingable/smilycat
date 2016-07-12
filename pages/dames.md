@@ -2,4 +2,4 @@
 title: Dames
 ---
 
-$include("cats/vasilisa")$
+$include("cats/vasilisa.*")$

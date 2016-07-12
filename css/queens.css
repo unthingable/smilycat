@@ -1,4 +1,4 @@
-@import "base.css";
+/* @import "base.css"; */
 
 html {
     height: 100%;
@@ -50,21 +50,39 @@ div#container {
 
 .gallery {
     text-align: left;
+    display: flex;
+    flex-flow: row wrap;
+    flex-wrap: wrap;
+    /* justify-content: space-between; */
+    /* align-content: flex-start; */
+}
+
+.gallery p {
+    display: inline;
 }
 
 .gallery img {
-    padding: 10px;
-    width: 200px;
+    padding-top: 10px;
+    /* padding: 0 10px; */
+    width: auto;
+    height: auto;
+    /* max-width: 200px; */
+    max-height: 200px;
+}
+
+.gallery .item {
+    margin: 0 5px;
 }
 
 .subgallery {
     text-align: center;
+    /* padding-bottom: 10px; */
 }
 
-.subgallery img {
-    padding: 0 10px;
-    width: 200px;
-}
+/* .subgallery img { */
+/*     padding: 0 10px; */
+/*     /\* width: 200px; *\/ */
+/* } */
 
 div#header {
     /* padding: 12px 20px 12px 0px; */
@@ -141,13 +159,14 @@ div.info {
     text-align: center;
 }
 
-div#content{
+div#content {
     font-size: 14px;
     line-height: 18px;
-    padding: 0 30px 20px 30px;
+    padding: 15px 30px 20px 30px;
+    max-width: 80%;
 }
 
-div#content h1{
+div#content h1 {
     color: #bbb;
     font-family: times, serif;
     font-style: italic;
@@ -157,8 +176,4 @@ div#content h1{
 
 .cap {
     text-transform: capitalize;
-}
-
-.crumbs {
-    padding: 10px;
 }

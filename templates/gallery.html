@@ -6,16 +6,14 @@ $endif$
 
 $if(subs)$
 <div class="gallery">
-  $for(subs)$
-  <div class="subgallery">
-    <a href="$subUrl$"><img src="$url$"/></a>
+  $for(subs)$ <div class="subgallery item"> <a href="$subUrl$"><img src="$url$"/></a>
     </br>
     <a href="$subUrl$" class="cap">$subTitle$</a>
-  </div>
-  $endfor$
+  </div>  $endfor$
 </div>
 $endif$
 <div class="gallery">
-
-  $for(pics)$<a href="$url$"><img src="$url$"/></a> $endfor$
+  $for(pics)$
+  <a href="$url$" class="item"><img src="$url$"/></a>
+  $endfor$
 </div>
