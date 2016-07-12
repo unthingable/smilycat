@@ -61,13 +61,6 @@ main = hakyll $ do
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
             >>= relativizeUrls
 
-    match "posts/*" $ do
-        route $ setExtension "html"
-        compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/post.html"    postCtx
-            >>= loadAndApplyTemplate "templates/default.html" postCtx
-            >>= relativizeUrls
-
     match "cats/*" $ do
         route $ setExtension "html"
         compile $ pandocCompiler
@@ -75,20 +68,6 @@ main = hakyll $ do
           >>= saveSnapshot "preload"
           >>= loadAndApplyTemplate "templates/default.html" indexCtx
           >>= relativizeUrls
-
-    create ["archive.html"] $ do
-        route idRoute
-        compile $ do
-            posts <- recentFirst =<< loadAll "posts/*"
-            let archiveCtx =
-                    listField "posts" postCtx (return posts) <>
-                    constField "title" "Archives"            <>
-                    defaultContext
-
-            makeItem ""
-                >>= loadAndApplyTemplate "templates/archive.html" archiveCtx
-                >>= loadAndApplyTemplate "templates/default.html" archiveCtx
-                >>= relativizeUrls
 
     match "templates/*" $ do
       compile templateBodyCompiler
@@ -106,11 +85,6 @@ main = hakyll $ do
 
 
 --------------------------------------------------------------------------------
-postCtx :: Context String
-postCtx =
-    dateField "date" "%B %e, %Y" `mappend`
-    defaultContext
-
 menuCtx :: Context String
 menuCtx =
   urlField "url" <>
@@ -127,17 +101,6 @@ menuCtx =
           case result of
             Just True -> return "me"
             _         -> return ""
-
-defaultMenuItems =
-  menuItemsFrom [ "kittens"
-                , "index"
-                , "sires"
-                , "dames"
-                , "gallery"
-                , "retired"
-                , "contact"
-                , "breed"
-                ]
 
 indexMenuItems :: Compiler [Item String]
 indexMenuItems = do
@@ -160,7 +123,6 @@ indexCtx =
   includeCtx <>
   groupCtx <>
   listField "menuItems" menuCtx indexMenuItems <>
-  listField "posts" postCtx (recentFirst =<< loadAll "posts/*") <>
   defaultContext
 
 
