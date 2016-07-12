@@ -1,8 +1,6 @@
 $if(crumbs)$
 <div class="crumbs">
-$for(crumbs)$
-> <a href="$url$" class="cap">$title$</a>
-$endfor$
+  $for(crumbs)$<a href="$url$" class="cap">$title$</a> $sep$&gt; $endfor$
 </div>
 $endif$
 
@@ -19,7 +17,5 @@ $if(subs)$
 $endif$
 <div class="gallery">
 
-  $for(pics)$
-  <a href="$url$"><img src="$url$"/></a>
-  $endfor$
+  $for(pics)$<a href="$url$"><img src="$url$"/></a> $endfor$
 </div>

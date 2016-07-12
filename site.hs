@@ -53,6 +53,8 @@ main = hakyll $ do
         route   idRoute
         compile compressCssCompiler
 
+    compileGallery
+
     match (fromList ["about.rst", "contact.markdown"]) $ do
         route   $ setExtension "html"
         compile $ pandocCompiler
@@ -88,35 +90,6 @@ main = hakyll $ do
                 >>= loadAndApplyTemplate "templates/default.html" archiveCtx
                 >>= relativizeUrls
 
-
-    -- match "index.html" $ do
-    --     route idRoute
-    --     compile $ do
-    --         -- posts <- recentFirst =<< loadAll "posts/*"
-    --         -- let indexCtx =
-    --         --         listField "posts" postCtx (return posts) <>
-    --         --         constField "title" "SF Bay Siberian and Neva Masquerade Cat" <>
-    --         --         defaultContext
-
-    --         getResourceBody
-    --             >>= applyAsTemplate indexCtx
-    --             >>= loadAndApplyTemplate "templates/default.html" indexCtx
-    --             >>= relativizeUrls
-
-    -- match "templates/menu-items.html" $ do
-    --   route idRoute
-    --   compile $ do
-    --     menus <- menuItems
-    --     let indexCtx =
-    --           listField "menuItems" defaultContext (return menus) <>
-    --           constField "title" "SF Bay Siberian and Neva Masquerade Cat" <>
-    --           defaultContext
-
-    --     getResourceBody
-    --       >>= applyAsTemplate indexCtx
-    --       >>= loadAndApplyTemplate "templates/default.html" indexCtx
-    --       >>= relativizeUrls
-
     match "templates/*" $ do
       compile templateBodyCompiler
 
@@ -130,9 +103,6 @@ main = hakyll $ do
           >>= renderPandoc
           >>= loadAndApplyTemplate "templates/default.html" indexCtx
           >>= relativizeUrls
-
-    -- compileTemplates
-    compileGallery
 
 
 --------------------------------------------------------------------------------
@@ -210,7 +180,7 @@ includeCtx :: Context String
 includeCtx = functionField "include" doInc
   where
     doInc (arg:_) _ = do
-      newItems <- flip loadAllSnapshots "preload" . fromGlob . (++ ".*") $ arg
+      newItems <- flip loadAllSnapshots "preload" . fromGlob $ arg
       return . maybe (arg ++ " --not found--") (lstrip . itemBody) $ listToMaybe newItems
     doInc _ _ = empty
     lstrip = unlines . map strip . lines
@@ -238,6 +208,7 @@ getSubPics = do
 getCrumbs :: Compiler [Item String]
 getCrumbs = do
   path <- toFilePath <$> getUnderlying
+  -- drop 2 because "image/gallery"
   return . map pathItem . drop 2 $ crumbs path []
   where crumbs "" ps = ps
         crumbs s ps  = crumbs (minusOne s) (s : ps)
@@ -250,7 +221,7 @@ compileGallery = do
         FF.find always (depth >=? 2 &&? FF.fileType ==? Directory) "images/gallery"
 
   create (traceShowId $ fromFilePath <$> reverse galleryDirs) $ do
-    route $ setExtension ".html" +~+ gsubRoute "images/" (const "")
+    route $ gsubRoute "images/" (const "") +~+ setExtension ".html"
     compile $ do
       makeItem ""
         >>= loadAndApplyTemplate "templates/gallery.html" picsCtx
@@ -281,5 +252,4 @@ picsCtx =
   titleField "title" <>
   defaultContext
 
--- capTitleField = mapContext (T.unpack . T.toTitle . T.pack) . titleField
 pathItem x = Item (fromFilePath x) x

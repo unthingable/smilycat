@@ -2,6 +2,6 @@
 title: Retired cats
 ---
 
-$include("cats/finist")$
+$include("cats/finist.*")$
 
-$include("cats/xandi")$
+$include("cats/xandi.*")$
