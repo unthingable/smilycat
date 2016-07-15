@@ -200,14 +200,15 @@ subGalleryContext :: Context CopyFile
 subGalleryContext =
   urlField "url" <>
   (field "subTitle" $ \item -> do
-      path <- toFilePath <$> getUnderlying
-      let pLen = length $ splitPath path
+      pLen <- (length . splitPath . toFilePath) <$> getUnderlying
       return . takeDirectory . (!! pLen) . splitPath . toFilePath $ itemIdentifier item) <>
   (field "subUrl" $ \item -> do
-      return . subGalleryUrl . toFilePath $ itemIdentifier item)
+      pLen <- (length . splitPath . toFilePath) <$> getUnderlying
+      return . subGalleryUrl pLen . toFilePath $ itemIdentifier item)
   where
     -- Careful with that path, Eugene - has to match the routes in compileGallery exactly
-    subGalleryUrl = (\s -> "/" ++ s ++ ".html") . dropTrailingPathSeparator . joinPath . tail . init . splitPath
+    subGalleryUrl pLen =
+      (\s -> "/" ++ s ++ ".html") . dropTrailingPathSeparator . joinPath . tail . take (pLen + 1) . splitPath
 
 picsCtx :: Context String
 picsCtx =
