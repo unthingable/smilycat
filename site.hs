@@ -158,13 +158,15 @@ getPicsInDir = do
 
 getSubPics :: Compiler [Item CopyFile]
 getSubPics = do
-    path <- toFilePath <$> getUnderlying
-    let pattern = foldl1 (.||.) $ map (fromGlob . (path ++)) ["/*/*.jpg", "/*/*.JPG"]
-    items <- loadAll pattern
-    -- get one from each
-    let groups = groupBy ((==) `on` (takeBaseName . takeDirectory . toFilePath . itemIdentifier)) items
-        heads  = catMaybes . map listToMaybe $ groups
-    return $ heads
+  path  <- toFilePath <$> getUnderlying
+  let pattern = foldl1 (.||.) $ map (fromGlob . (path ++)) ["/*/**.jpg", "/*/**.JPG"]
+      pLen    = length $ splitPath path
+  items <- loadAll pattern
+  -- get one from each
+  let
+    groups = groupBy ((==) `on` (take (pLen + 1) . splitPath . toFilePath . itemIdentifier)) items
+    heads  = catMaybes . map listToMaybe $ traceShowId groups
+  return $ heads
 
 -- a little fragile, but works
 getCrumbs :: Compiler [Item String]
@@ -198,12 +200,13 @@ subGalleryContext :: Context CopyFile
 subGalleryContext =
   urlField "url" <>
   (field "subTitle" $ \item -> do
-      return . subGalleryTitle . toFilePath $ itemIdentifier item) <>
+      path <- toFilePath <$> getUnderlying
+      let pLen = length $ splitPath path
+      return . takeDirectory . (!! pLen) . splitPath . toFilePath $ itemIdentifier item) <>
   (field "subUrl" $ \item -> do
       return . subGalleryUrl . toFilePath $ itemIdentifier item)
   where
     -- Careful with that path, Eugene - has to match the routes in compileGallery exactly
-    subGalleryTitle = takeBaseName . takeDirectory
     subGalleryUrl = (\s -> "/" ++ s ++ ".html") . dropTrailingPathSeparator . joinPath . tail . init . splitPath
 
 picsCtx :: Context String
