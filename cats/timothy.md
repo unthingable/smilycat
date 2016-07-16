@@ -1,6 +1,8 @@
 ---
 title: Timothy
-titleStr: Currently holds a something
+titleImg: index/tima.jpg
+gallery: gallery/tima.html
 ---
+Smilycat Timothy Snow Leopard
 
-Тима.
+Born April 1, 2015

@@ -1,6 +1,9 @@
 ---
 title: Yamaha Iz Odissei
-titleStr: Currently holds nothing
+titleImg: index/yamaha.jpg
+gallery: gallery/Yamaha.html
 ---
 
-Лиска.
+Yamaha iz Odissei
+
+Born May 30, 2015

@@ -11,18 +11,18 @@ group_3: Xandi_3 Xandi_4 FINIST05 FINIST07
 ---
 
 
-We are an in-home cattery and the Siberians are our passion. Our cats live in a friendly environment enjoying all privileges of members of the pack. We are located in the San Francisco Bay Area, and you are always welcome to see the conditions. All our kittens are available for shipping.
+We are an in-home cattery and Siberians are our passion. Our cats live in a friendly environment enjoying all the privileges of the members of the pack. We are located in the east of San Francisco Bay Area and you are always welcome to see the conditions. All our kittens are available for shipping. 
 
 
 $for(group_1)$ [![](images/index/$body$.jpg){ width=200px }](images/index/$body$.jpg) $endfor$
 
 
-Our cats come from some of the best Russian breeders:
+Our Siberians come from the best Russian breeders:
 the _Lion's Heart_ ([Львиное Сердце](http://www.lvinserdce.ru/)),
 _Velikii Ohotnik_ ([Великий Охотник](http://velikiiohotnik.narod.ru/)) and
 _Iz Odissei_ ([Из Одиссеи](http://izodissei.ru/))
 catteries in Moscow.
-The selection has been made with genetic diversity in mind as one of the highest contributing factors to the purebred cats' health. All our kittens come with a health guarantee.
+The selection has been made with the genetic diversity in mind as one of the highest contributing factors to the purebred cat's health. All our kittens come with a health guarantee, CFA and TICA registered.
 
 
 $for(group_2)$ [![](images/index/$body$.jpg){ width=200px }](images/index/$body$.jpg) $endfor$
