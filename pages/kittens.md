@@ -1,6 +1,9 @@
 ---
-title: Kittens for you
-foo: bar
+title: Available Kittens
 ---
 
-Meow.
+## Avaliable kittens
+
+<table class="kittens">
+$include("kittens/alesha.*")$
+</table>

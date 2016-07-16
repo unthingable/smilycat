@@ -69,6 +69,14 @@ main = hakyll $ do
           >>= loadAndApplyTemplate "templates/default.html" indexCtx
           >>= relativizeUrls
 
+    match "kittens/*" $ do
+        route $ setExtension "html"
+        compile $ pandocCompiler
+          >>= loadAndApplyTemplate "templates/kitten-row.html" defaultContext
+          >>= saveSnapshot "preload"
+          -- >>= loadAndApplyTemplate "templates/default.html" indexCtx
+          -- >>= relativizeUrls
+
     match "templates/*" $ do
       compile templateBodyCompiler
 
@@ -123,6 +131,7 @@ indexCtx =
   includeCtx <>
   groupCtx <>
   listField "menuItems" menuCtx indexMenuItems <>
+  listField "kittens" defaultContext (loadAll "kittens/*") <>
   defaultContext
 
 

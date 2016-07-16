@@ -1,0 +1,21 @@
+<tr>
+  $if(titleImg)$
+  <td>
+    <a href="/gallery/kittens/$litter$/$title$.html"><img src="/images/gallery/kittens/$litter$/$title$/$titleImg$"/></a>
+    <br/>
+    <a href="/gallery/kittens/$litter$/$title$.html">More images of $title$</a>
+  </td>
+  $endif$
+  <td>
+    <a href="/gallery/kittens/$litter$/$title$.html">$title$ Smilycat</a><br/>
+    <b>$sex$</b><br/>
+    color: $color$<br/>
+  </td>
+  <td>
+    $if(available)$
+    Available
+    $else$
+    Not available
+    $endif$
+  </td>
+</tr>

@@ -148,6 +148,7 @@ div#content {
     line-height: 18px;
     padding: 15px 30px 20px 30px;
     max-width: 80%;
+    width: 100%;
 }
 
 div#content h1 {
@@ -160,4 +161,22 @@ div#content h1 {
 
 .cap {
     text-transform: capitalize;
+}
+
+.kittens td {
+    padding: 20px;
+    text-align: center;
+    line-height: 30px;
+}
+
+.kittens {
+    margin: 0 auto;
+    font-size: 16px;
+}
+
+.kittens img {
+    width: auto;
+    height: auto;
+    /* max-width: 200px; */
+    max-height: 150px;
 }
