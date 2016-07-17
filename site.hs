@@ -19,6 +19,9 @@ import System.IO.Unsafe (unsafePerformIO)
 --------------------------------------------------------------------------------
 (+~+) = composeRoutes
 
+lstrip = unlines . map strip . lines
+
+
 contentContext :: Compiler (Context String)
 contentContext = do
   menu <- getMenu
@@ -69,7 +72,7 @@ main = hakyll $ do
           >>= loadAndApplyTemplate "templates/default.html" indexCtx
           >>= relativizeUrls
 
-    match "kittens/*" $ do
+    match "kittens/*" $ version "raw" $ do
         route $ setExtension "html"
         compile $ pandocCompiler
           >>= loadAndApplyTemplate "templates/kitten-row.html" defaultContext
@@ -131,7 +134,7 @@ indexCtx =
   includeCtx <>
   groupCtx <>
   listField "menuItems" menuCtx indexMenuItems <>
-  listField "kittens" defaultContext (loadAll "kittens/*") <>
+  listField "kittens" defaultContext (loadAll ("kittens/*" .&&. hasVersion "raw")) <>
   defaultContext
 
 
@@ -154,7 +157,6 @@ includeCtx = functionField "include" doInc
       newItems <- flip loadAllSnapshots "preload" . fromGlob $ arg
       return . maybe (arg ++ " --not found--") (lstrip . itemBody) $ listToMaybe newItems
     doInc _ _ = empty
-    lstrip = unlines . map strip . lines
 
 --------------------------------------------------------------------------------
 

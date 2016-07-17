@@ -1,8 +1,8 @@
 ---
-title: Alesha
+title: Antonio
 available: true
 litter: Born 2016-June-1
-titleImg: Alesha2.jpg
+titleImg: Antonio.jpg
 sex: Male
-color: Cameo
+color: Red
 ---
