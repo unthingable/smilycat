@@ -12,4 +12,6 @@ $(document).ready(function() {
 	    // s.addClass("unstick");
 	}
     });
+
+    $(".lightgallery").lightGallery();
 });
