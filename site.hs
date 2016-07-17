@@ -19,7 +19,8 @@ import System.IO.Unsafe (unsafePerformIO)
 --------------------------------------------------------------------------------
 (+~+) = composeRoutes
 
-lstrip = unlines . map strip . lines
+-- | remove newlines
+lstrip = intercalate " " . filter (/="") . map strip . lines
 
 -- Useful combinator here
 xs --> f = mapM_ (\p -> match p $ f) xs
