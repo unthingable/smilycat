@@ -254,3 +254,12 @@ div#content {
     color: #C9301C;
     text-transform: uppercase;
 }
+
+.media {
+    padding: 15px;
+}
+
+.media a {
+    color: #222;
+    padding: 5px;
+}
