@@ -232,6 +232,14 @@ div#content {
     margin: 0;
 }
 
+.kittens td:first-child {
+    padding-left: 60px;
+}
+
+.kittens td:last-child {
+    padding-right: 60px;
+}
+
 .kittens tr {
     background-color: #eee;
     border: solid white thin;
