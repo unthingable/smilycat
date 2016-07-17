@@ -1,0 +1,256 @@
+/* @import "base.css"; */
+
+@font-face {
+    font-family: "neuzeit";
+    src:
+	url('../fonts/NeuzeitSBook.ttf')
+	format('truetype');
+}
+
+@font-face{
+    font-family:"Snell BT";
+    src: url("../fonts/SnellBT.ttf");
+}
+
+body {
+    font-family: sans-serif;
+    font-size: 16px;
+    margin: 0;
+}
+
+#title {
+    width: 100%;
+    height: 180px;
+    background-image: url("../images/shapka2.jpg");
+    background-position: 50% 35.62%;
+    background-size: cover;
+
+    color: white;
+    text-align: center;
+    position: relative;
+}
+
+#title .title-string {
+    font-family: "neuzeit";
+    font-weight: bold;
+    font-size: 40px;
+    /* top: 100px; */
+    /* position: relative; */
+    padding-top: 100px;
+    height: 45px;
+    line-height: 45px;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    #title .title-string {
+        line-height: 60px;
+    }
+}
+
+#title .subtitle-string {
+    font-family: "Snell BT";
+    font-size: 18pt;
+    top: 80px;
+    /* margin-top: -4px; */
+}
+
+
+div#container {
+    margin-left: 200px;
+    width: 80%;
+    min-width: 600px;
+    /* min-height: 100%; */
+    /* height: auto; */
+}
+
+.cat-container td {
+    padding: 0 30px;
+}
+
+.cat-container img {
+    width: auto;
+    height: auto;
+    max-width: 450px;
+}
+
+.gallery {
+    text-align: left;
+    display: flex;
+    flex-flow: row wrap;
+    flex-wrap: wrap;
+    /* justify-content: space-between; */
+    /* align-content: flex-start; */
+}
+
+.gallery p {
+    display: inline;
+}
+
+.gallery img {
+    padding-top: 10px;
+    /* padding: 0 10px; */
+    width: auto;
+    height: auto;
+    /* max-width: 200px; */
+    max-height: 200px;
+}
+
+.gallery .item {
+    margin: 0 5px;
+}
+
+.subgallery {
+    text-align: center;
+    /* padding-bottom: 10px; */
+}
+
+div#header {
+    /* padding: 12px 20px 12px 0px; */
+    /* width:130px; */
+    background:#C0DFDF;
+}
+
+#header .menuitem.me {
+    /* list-style: none; */
+    background: #87ceff;
+}
+
+
+.menuitem.me {
+    text-decoration: underline;
+}
+
+.menuitem a {
+    color: #444;
+    font-weight: normal;
+}
+
+.menuitem.me a {
+    color: black;
+    font-weight: bold;
+}
+
+#header .menuitem {
+    line-height: 23px;
+    font-size: 16px;
+    padding: 3px 10px;
+    text-overflow: nowrap;
+}
+
+
+div#logo {
+    text-align: center;
+    margin-bottom: 40px;
+    margin-top: 40px;
+}
+
+div#logo a {
+    color: #fff;
+    font-family: times, serif;
+    /* font-size: 38px; */
+    font-weight: light;
+    text-decoration: none;
+    width: 270px;
+}
+
+.stick {
+    position:fixed;
+    top: 0px;
+}
+
+div#navigation {
+    float: left;
+    /* height: 100%; */
+    width: 170px;
+    padding: 20px 15px;
+    line-height: 35px;
+    white-space: nowrap;
+}
+
+#navigation .unstick {
+    top: 250px;
+}
+
+#navigation a {
+    /* display:table-row; */
+    /* font-size: 18px; */
+    /* font-weight: bold; */
+    text-decoration: none;
+    /* color: #222; */
+    /* width:100%; */
+}
+
+#navigation a:hover {
+    text-decoration: underline;
+}
+
+div#footer {
+    color: #555;
+    font-size: 12px;
+    margin-top: 30px;
+    padding: 12px 30px 12px 0px;
+    text-align: right;
+}
+
+#content h1 {
+    font-size: 24px;
+    color: #753170;
+    margin: auto;
+    padding: 15px;
+}
+
+#content h2 {
+    font-size: 20px;
+    color: #753170;
+    margin: auto;
+    padding: 15px;
+}
+
+div.info {
+    color: #555;
+    font-size: 14px;
+    font-style: italic;
+    text-align: center;
+}
+
+div#content {
+    font-size: 16px;
+    line-height: 21px;
+    padding: 15px 30px 80px 30px;
+    /* display: flex; */
+    /* display: -webkit-flex; */
+}
+
+.cap {
+    text-transform: capitalize;
+}
+
+.kittens td {
+    padding: 20px;
+    text-align: center;
+    line-height: 30px;
+    margin: 0;
+}
+
+.kittens tr {
+    background-color: #eee;
+    border: solid white thin;
+}
+
+.kittens {
+    /* margin: 0 auto; */
+    font-size: 16px;
+    border-collapse: collapse;
+}
+
+.kittens img {
+    width: auto;
+    height: auto;
+    /* max-width: 200px; */
+    max-height: 150px;
+}
+
+.kittens .available {
+    color: #C9301C;
+    text-transform: uppercase;
+}

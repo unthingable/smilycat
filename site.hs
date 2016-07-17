@@ -21,36 +21,20 @@ import System.IO.Unsafe (unsafePerformIO)
 
 lstrip = unlines . map strip . lines
 
+-- Useful combinator here
+xs --> f = mapM_ (\p -> match p $ f) xs
 
-contentContext :: Compiler (Context String)
-contentContext = do
-  menu <- getMenu
-  return $
-    defaultContext <>
-    constField "menu" (traceId menu)
+-- Completely static
+copy = route idRoute >> compile copyFileCompiler
 
-getMenu :: Compiler String
-getMenu = do
-  menu <- map itemBody <$> loadAll (fromVersion $ Just "menu")
-  myRoute <- getRoute =<< getUnderlying
-  return $ case myRoute of
-             Nothing -> showMenu "" menu
-             Just me -> showMenu me menu
-
-showMenu :: FilePath -> [FilePath] -> String
-showMenu this items = "<ul>"++concatMap li items++"</ul>"
-  where li item = "<li><a href=\"/"++item++"\">"++name item++"</a></li>"
-        name item | item == this = "<strong>"++item++"</strong>"
-                  | otherwise    = item
-
-compileTemplates :: Rules ()
-compileTemplates = match "template.html" $ compile templateCompiler
 
 main :: IO ()
 main = hakyll $ do
-    match "images/**" $ do
-        route   idRoute
-        compile copyFileCompiler
+    ["favicon.ico"]            --> copy
+    ["img/**", "images/**"]    --> copy
+    ["static/**", "files/**"]  --> copy
+    ["js/**", "javascript/**"] --> copy
+    ["fonts/*"]                --> copy
 
     match "css/*" $ do
         route   idRoute
@@ -176,7 +160,7 @@ getSubPics = do
   -- get one from each
   let
     groups = groupBy ((==) `on` (take (pLen + 1) . splitPath . toFilePath . itemIdentifier)) items
-    heads  = catMaybes . map listToMaybe $ traceShowId groups
+    heads  = catMaybes . map listToMaybe $ groups
   return $ heads
 
 -- a little fragile, but works
