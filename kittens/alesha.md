@@ -2,7 +2,7 @@
 title: Alesha
 available: true
 litter: Born 2016-June-1
-titleImg: Alesha2.jpg
+titleImg: lehasuper.jpg
 sex: Male
 color: Cameo
 ---

@@ -9,4 +9,5 @@ $include("kittens/antonio.*")$
 $include("kittens/alesha.*")$
 $include("kittens/anya.*")$
 $include("kittens/athena.*")$
+$include("kittens/asya.*")$
 </table>

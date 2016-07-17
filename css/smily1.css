@@ -233,16 +233,17 @@ div#content {
 }
 
 .kittens td:first-child {
-    padding-left: 60px;
+    padding-left: 80px;
 }
 
 .kittens td:last-child {
-    padding-right: 60px;
+    padding-right: 80px;
 }
 
 .kittens tr {
     background-color: #eee;
     border: solid white thin;
+    padding: 15px 0;
 }
 
 .kittens {
