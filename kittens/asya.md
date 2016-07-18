@@ -1,6 +1,6 @@
 ---
 title: Asya
-available: true
+available: reserved
 litter: Born 2016-June-1
 titleImg: Asya.jpg
 sex: Female

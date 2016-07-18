@@ -1,6 +1,6 @@
 ---
 title: Athena
-available: true
+available: available
 litter: Born 2016-June-1
 titleImg: Afina1.jpg
 sex: Female
