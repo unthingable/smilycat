@@ -1,6 +1,6 @@
 ---
 title: Alesha
-available: available
+available: reserved
 litter: Born 2016-June-1
 titleImg: lehasuper.jpg
 sex: Male

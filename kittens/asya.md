@@ -1,8 +1,8 @@
 ---
 title: Asya
-available: reserved
+available: available
 litter: Born 2016-June-1
 titleImg: Asya.jpg
 sex: Female
-color: Neva Masquerade
+color: Tortie Point Neva Masquerade
 ---
