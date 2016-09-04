@@ -1,5 +1,5 @@
 ---
-title: Breed & Allery info
+title: Breed & Allergy info
 ---
 
 ## Allergy information
