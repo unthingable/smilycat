@@ -2,7 +2,7 @@
 
 title: About us
 
-menu: pages/kittens pages/index pages/sires pages/dames pages/gallery pages/retired pages/contact pages/breed
+menu: pages/kittens pages/index pages/sires pages/dames pages/gallery pages/retired pages/contact pages/breed pages/proof
 
 group_1: GROUP3 aleshkin G2
 group_2: W1_5 B1_7 anton
